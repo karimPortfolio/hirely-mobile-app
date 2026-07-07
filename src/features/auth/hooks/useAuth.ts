@@ -46,11 +46,17 @@ export function useAuth() {
     setLoading(true);
 
     try {
-      await loginRequest(credentials);
+      const response = await loginRequest(credentials);
+      if (!response?.accessToken) {
+        throw new Error(
+          "Account created, but authentication token is missing.",
+        );
+      }
+      await SecureStore.setItemAsync("access_token", response.accessToken);
       await fetchUser();
+      router.push("/(tabs)");
     } catch (err) {
       handleError(err);
-      throw err;
     } finally {
       setLoading(false);
     }
@@ -85,7 +91,6 @@ export function useAuth() {
       setUser(null);
     } catch (err) {
       handleError(err);
-      throw err;
     } finally {
       setLoading(false);
     }
@@ -101,7 +106,6 @@ export function useAuth() {
       await forgotPasswordRequest(credentials);
     } catch (err) {
       handleError(err);
-      throw err;
     } finally {
       setLoading(false);
     }
@@ -115,7 +119,6 @@ export function useAuth() {
       await resetPasswordRequest(credentials);
     } catch (err) {
       handleError(err);
-      throw err;
     } finally {
       setLoading(false);
     }
@@ -129,7 +132,6 @@ export function useAuth() {
       await emailVerificationRequest();
     } catch (err) {
       handleError(err);
-      throw err;
     } finally {
       setLoading(false);
     }
@@ -143,7 +145,6 @@ export function useAuth() {
       await verifyEmailRequest(token, email);
     } catch (err) {
       handleError(err);
-      throw err;
     } finally {
       setLoading(false);
     }
@@ -157,7 +158,6 @@ export function useAuth() {
       googleOAuthRedirectRequest();
     } catch (err) {
       handleError(err);
-      throw err;
     } finally {
       setLoading(false);
     }

@@ -18,7 +18,7 @@ import { useAuth } from "@/features/auth/hooks/useAuth";
 import { registerSchema } from "@/features/auth/schemas/register.schema";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Link, useRouter } from "expo-router";
+import { Link } from "expo-router";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Image, Text } from "react-native";
@@ -115,7 +115,7 @@ export default function RegisterScreen() {
                   isDisabled={false}
                   isInvalid={false}
                   isReadOnly={false}
-                  className={cn(errors.name && "!border-red-500")}
+                  className={cn(errors.first_name && "!border-red-500")}
                 >
                   <InputField
                     onChangeText={onChange}
@@ -140,7 +140,7 @@ export default function RegisterScreen() {
                   isDisabled={false}
                   isInvalid={false}
                   isReadOnly={false}
-                  className={cn(errors.name && "!border-red-500")}
+                  className={cn(errors.last_name && "!border-red-500")}
                 >
                   <InputField
                     onChangeText={onChange}
@@ -258,10 +258,20 @@ export default function RegisterScreen() {
                 onChange={(checked) => onChange(checked)}
                 className={cn(errors.accepted_terms && "!border-red-500")}
               >
-                <CheckboxIndicator className="w-5 h-5">
+                <CheckboxIndicator
+                  className={cn(
+                    "w-5 h-5",
+                    errors.accepted_terms && "!border-red-500",
+                  )}
+                >
                   <CheckboxIcon as={CheckIcon} />
                 </CheckboxIndicator>
-                <CheckboxLabel className="text-md">
+                <CheckboxLabel
+                  className={cn(
+                    "text-md",
+                    errors.accepted_terms && "!text-red-500",
+                  )}
+                >
                   I accept the terms and conditions
                 </CheckboxLabel>
               </Checkbox>

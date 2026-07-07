@@ -1,6 +1,7 @@
 import { AuthPageLayout } from "@/components/AuthPageLayout";
+import { Field } from "@/components/common/Field";
+import { LoadingButton } from "@/components/common/LoadingButton";
 import { Box } from "@/components/ui/box";
-import { Button, ButtonText } from "@/components/ui/button";
 import {
   Checkbox,
   CheckboxIcon,
@@ -12,17 +13,42 @@ import { HStack } from "@/components/ui/hstack";
 import { CheckIcon, EyeIcon, EyeOffIcon } from "@/components/ui/icon";
 import { Input, InputField, InputIcon, InputSlot } from "@/components/ui/input";
 import { VStack } from "@/components/ui/vstack";
+import { useAuth } from "@/features/auth/hooks/useAuth";
+import { loginSchema } from "@/features/auth/schemas/login.schema";
+import { cn } from "@/lib/utils";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Link } from "expo-router";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { Image, Text } from "react-native";
+import z from "zod";
+
+type LoginFormData = z.infer<ReturnType<typeof loginSchema>>;
 
 export default function LoginScreen() {
-  const [credentials, setCredentials] = useState({
-    rememberMe: "false",
-  });
   const [showPassword, setShowPassword] = useState(false);
-  const handlePasswordToggle = () => {
-    setShowPassword(!showPassword);
+  const { login, loading, apiError, clearApiError } = useAuth();
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    clearErrors,
+    setError,
+  } = useForm<LoginFormData>({
+    // resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+      remember_me: false,
+    },
+  });
+
+  const onSubmit = async (data: LoginFormData) => {
+    clearApiError();
+    try {
+      login(data);
+    } catch (err) {}
   };
 
   return (
@@ -43,43 +69,96 @@ export default function LoginScreen() {
           </Text>
         </VStack>
         <VStack space="2xl" className="mb-7">
-          <VStack space="sm">
-            <Text className="text-foreground/60">Email</Text>
-            <Input isDisabled={false} isInvalid={false} isReadOnly={false}>
-              <InputField placeholder="Enter your email..." />
-            </Input>
-          </VStack>
-          <VStack space="sm">
-            <Text className="text-foreground/60">Password</Text>
-            <Input isDisabled={false} isInvalid={false} isReadOnly={false}>
-              <InputField
-                type={showPassword ? "text" : "password"}
-                placeholder="Enter your password..."
-              />
-              <InputSlot className="pr-3" onPress={handlePasswordToggle}>
-                <InputIcon as={showPassword ? EyeIcon : EyeOffIcon} />
-              </InputSlot>
-            </Input>
-          </VStack>
+          <Field
+            control={control}
+            label="Email"
+            name="email"
+            error={errors.email}
+            isRequired
+            space="sm"
+            onRender={({ field: { onChange, onBlur, value } }) => (
+              <Input
+                isRequired={true}
+                isDisabled={false}
+                isInvalid={false}
+                isReadOnly={false}
+                className={cn(errors.email && "!border-red-500")}
+              >
+                <InputField
+                  onChangeText={onChange}
+                  value={value}
+                  placeholder="Enter your email..."
+                />
+              </Input>
+            )}
+          />
+
+          <Field
+            control={control}
+            label="Password"
+            name="password"
+            error={errors.password}
+            space="sm"
+            isRequired
+            onRender={({ field: { onChange, onBlur, value } }) => (
+              <Input
+                isRequired={true}
+                isDisabled={false}
+                isInvalid={false}
+                isReadOnly={false}
+                className={cn(errors.password && "!border-red-500")}
+              >
+                <InputField
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Enter your password..."
+                  value={value}
+                  onChangeText={onChange}
+                />
+                <InputSlot
+                  className="pr-3"
+                  onPress={() => setShowPassword(!showPassword)}
+                >
+                  <InputIcon as={showPassword ? EyeIcon : EyeOffIcon} />
+                </InputSlot>
+              </Input>
+            )}
+          />
+
           <HStack className="flex flex-row justify-between">
-            <Checkbox
-              value={credentials.rememberMe}
-              isDisabled={false}
-              isInvalid={false}
-            >
-              <CheckboxIndicator className="w-5 h-5">
-                <CheckboxIcon as={CheckIcon} />
-              </CheckboxIndicator>
-              <CheckboxLabel className="text-md">Remember me</CheckboxLabel>
-            </Checkbox>
+            <Field
+              control={control}
+              name="remember_me"
+              isRequired
+              space="sm"
+              onRender={({ field: { onChange, onBlur, value } }) => (
+                <Checkbox
+                  isChecked={value}
+                  value="accepted"
+                  isDisabled={false}
+                  isInvalid={false}
+                  onChange={(checked) => onChange(checked)}
+                  className={cn(errors.remember_me && "!border-red-500")}
+                >
+                  <CheckboxIndicator className="w-5 h-5">
+                    <CheckboxIcon as={CheckIcon} />
+                  </CheckboxIndicator>
+                  <CheckboxLabel className="text-md">Remember me</CheckboxLabel>
+                </Checkbox>
+              )}
+            />
             <Link href="/(auth)/login">
               <Text>Forgot password?</Text>
             </Link>
           </HStack>
         </VStack>
-        <Button size="lg" className="mb-5">
-          <ButtonText className="text-md">Sign In</ButtonText>
-        </Button>
+        <LoadingButton
+          label="Sign In"
+          loadingLabel="Signing in..."
+          size="lg"
+          className="mb-5"
+          isLoading={loading}
+          onPress={handleSubmit(onSubmit)}
+        />
         <Box className="flex justify-center items-center">
           <Text className="text-center text-gray-600 dark:text-gray-400">
             Don't have an account?{" "}

@@ -9,7 +9,8 @@ import {
 } from "../types";
 
 export const loginRequest = async (credentials: LoginCredentials) => {
-  return await api.post(AUTH_ROUTES.login, credentials);
+  const { data } = await api.post<AuthResponse>(AUTH_ROUTES.login, credentials);
+  return data;
 };
 
 export const logoutRequest = async () => {
