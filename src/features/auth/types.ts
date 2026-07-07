@@ -45,7 +45,7 @@ export enum UserRole {
 export interface AuthResponse {
   user?: User;
   message?: string;
-  token?: string;
+  accessToken?: string;
 }
 
 export interface RegisterCredentials {

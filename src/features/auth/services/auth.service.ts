@@ -22,12 +22,10 @@ export const fetchMe = async () => {
 };
 
 export const registerRequest = async (credentials: RegisterCredentials) => {
-  console.log("Sending request...");
   const { data } = await api.post<AuthResponse>(
     AUTH_ROUTES.register,
     credentials,
   );
-
   return data;
 };
 

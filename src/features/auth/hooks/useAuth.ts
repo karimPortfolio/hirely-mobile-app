@@ -2,6 +2,8 @@
 
 import { useApiError } from "@/hooks/useApiError";
 import { useAuthStore } from "@/stores/auth.store";
+import { useRouter } from "expo-router";
+import * as SecureStore from "expo-secure-store";
 import { useState } from "react";
 import {
   emailVerificationRequest,
@@ -26,6 +28,7 @@ export function useAuth() {
   const { error, handleError, clearError } = useApiError();
 
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const fetchUser = async () => {
     try {
@@ -59,7 +62,14 @@ export function useAuth() {
 
     try {
       const response = await registerRequest(credentials);
-      console.log(response);
+      if (!response?.accessToken) {
+        throw new Error(
+          "Account created, but authentication token is missing.",
+        );
+      }
+      await SecureStore.setItemAsync("access_token", response.accessToken);
+      await fetchUser();
+      router.push("/(tabs)");
     } catch (err: any) {
       handleError(err);
     } finally {
