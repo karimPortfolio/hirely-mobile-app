@@ -61,6 +61,9 @@ export const verifyEmailRequest = async (token: string, email: string) => {
   await api.post(AUTH_ROUTES.verifyEmail, { token, email });
 };
 
-export const googleOAuthRedirectRequest = () => {
-  window.location.href = AUTH_ROUTES.googleAuthRedirect;
+export const googleOAuth = async (idToken: string) => {
+  const { data } = await api.post<AuthResponse>(AUTH_ROUTES.googleOAuth, {
+    token: idToken,
+  });
+  return data;
 };

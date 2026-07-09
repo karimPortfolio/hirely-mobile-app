@@ -9,7 +9,7 @@ import {
   emailVerificationRequest,
   fetchMe,
   forgotPasswordRequest,
-  googleOAuthRedirectRequest,
+  googleOAuth,
   loginRequest,
   logoutRequest,
   registerRequest,
@@ -53,7 +53,6 @@ export function useAuth() {
         );
       }
       await SecureStore.setItemAsync("access_token", response.accessToken);
-      await fetchUser();
       router.push("/(tabs)");
     } catch (err) {
       handleError(err);
@@ -74,7 +73,6 @@ export function useAuth() {
         );
       }
       await SecureStore.setItemAsync("access_token", response.accessToken);
-      await fetchUser();
       router.push("/(tabs)");
     } catch (err: any) {
       handleError(err);
@@ -150,12 +148,19 @@ export function useAuth() {
     }
   };
 
-  const googleOAuthRedirect = () => {
+  const googleSignin = async (idToken: string) => {
     clearError();
     setLoading(true);
 
     try {
-      googleOAuthRedirectRequest();
+      const response = await googleOAuth(idToken);
+      if (!response?.accessToken) {
+        throw new Error(
+          "Account created, but authentication token is missing.",
+        );
+      }
+      await SecureStore.setItemAsync("access_token", response.accessToken);
+      router.push("/(tabs)");
     } catch (err) {
       handleError(err);
     } finally {
@@ -175,7 +180,7 @@ export function useAuth() {
     register,
     requestPasswordReset,
     resetPassword,
-    googleOAuthRedirect,
+    googleSignin,
     verifyEmail,
     resentVerification,
 

@@ -8,15 +8,17 @@ import {
   CheckboxIndicator,
   CheckboxLabel,
 } from "@/components/ui/checkbox";
+import { Divider } from "@/components/ui/divider";
 import { Heading } from "@/components/ui/heading";
 import { HStack } from "@/components/ui/hstack";
 import { CheckIcon, EyeIcon, EyeOffIcon } from "@/components/ui/icon";
 import { Input, InputField, InputIcon, InputSlot } from "@/components/ui/input";
 import { VStack } from "@/components/ui/vstack";
+import { AppleSigninButton } from "@/features/auth/components/AppleSigninButton";
+import { GoogleSigninButton } from "@/features/auth/components/GoogleSigninButton";
 import { useAuth } from "@/features/auth/hooks/useAuth";
 import { loginSchema } from "@/features/auth/schemas/login.schema";
 import { cn } from "@/lib/utils";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { Link } from "expo-router";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -155,11 +157,19 @@ export default function LoginScreen() {
           label="Sign In"
           loadingLabel="Signing in..."
           size="lg"
-          className="mb-5"
           isLoading={loading}
           onPress={handleSubmit(onSubmit)}
         />
-        <Box className="flex justify-center items-center">
+        <Box className="flex flex-row justify-center items-center my-10">
+          <Divider className="my-0.5 w-20 flex-1" />
+          <Text className="mx-4 text-gray-600 dark:text-gray-400">Or</Text>
+          <Divider className="my-0.5 w-20 flex-1" />
+        </Box>
+        <Box className="flex flex-row justify-center items-center gap-4">
+          <GoogleSigninButton />
+          <AppleSigninButton />
+        </Box>
+        <Box className="flex justify-center items-center mt-10">
           <Text className="text-center text-gray-600 dark:text-gray-400">
             Don't have an account?{" "}
             <Link href="/(auth)/register" className="underline">
