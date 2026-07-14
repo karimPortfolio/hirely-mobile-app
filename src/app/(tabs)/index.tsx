@@ -1,14 +1,22 @@
-import { Link } from "expo-router";
-import { Text } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SearchFiltersBar } from "@/components/filters/SearchFiltersBar";
+import { Header } from "@/components/header/Header";
+import { PageLayout } from "@/components/PageLayout";
+import { SuggestedJobs } from "@/features/jobs/components/SuggestedJobs";
+import { usePublicJobsList } from "@/features/jobs/hooks/usePublicJobsList";
 
 export default function HomeScreen() {
+  const { jobs, loading, query, setQuery } = usePublicJobsList({
+    page: 1,
+    limit: 10,
+    sortBy: "createdAt",
+    order: "desc",
+  });
+
   return (
-    <SafeAreaView>
-      <Text className="text-center text-4xl text-white">Home Screen</Text>
-      <Link href={{ pathname: "/(auth)/register" }}>
-        <Text className="text-white text-center underline">Register</Text>
-      </Link>
-    </SafeAreaView>
+    <PageLayout>
+      <Header />
+      <SearchFiltersBar setQuery={setQuery} query={query} />
+      <SuggestedJobs jobs={jobs} loading={loading} />
+    </PageLayout>
   );
 }

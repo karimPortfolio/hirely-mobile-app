@@ -53,6 +53,7 @@ export function useAuth() {
         );
       }
       await SecureStore.setItemAsync("access_token", response.accessToken);
+      await fetchUser();
       router.push("/(tabs)");
     } catch (err) {
       handleError(err);
@@ -73,6 +74,7 @@ export function useAuth() {
         );
       }
       await SecureStore.setItemAsync("access_token", response.accessToken);
+      await fetchUser();
       router.push("/(tabs)");
     } catch (err: any) {
       handleError(err);
@@ -160,6 +162,7 @@ export function useAuth() {
         );
       }
       await SecureStore.setItemAsync("access_token", response.accessToken);
+      await fetchUser();
       router.push("/(tabs)");
     } catch (err) {
       handleError(err);

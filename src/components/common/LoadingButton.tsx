@@ -3,7 +3,7 @@ import { Button, ButtonSpinner, ButtonText } from "../ui/button";
 interface LoadingButtonProps {
   isLoading: boolean;
   onPress: () => void;
-  label: string;
+  label?: string;
   loadingLabel?: string;
   size?: "sm" | "lg";
   children?: React.ReactNode;

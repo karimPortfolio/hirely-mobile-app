@@ -1,5 +1,6 @@
 import { GlobalToastController } from "@/components/GlobalToastController";
 import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
+import { Spinner } from "@/components/ui/spinner";
 import "@/global.css";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
@@ -10,9 +11,8 @@ import {
   useRouter,
   useSegments,
 } from "expo-router";
-import * as SplashScreen from "expo-splash-screen";
 import { useEffect, useState } from "react";
-import { ActivityIndicator, useColorScheme, View } from "react-native";
+import { Text, useColorScheme, View } from "react-native";
 
 // SplashScreen.preventAutoHideAsync();
 
@@ -58,10 +58,14 @@ export default function RootLayout() {
         style={{
           flex: 1,
           justifyContent: "center",
-          backgroundColor: "#131527",
+          backgroundColor: isDark ? "#000000" : "#FFFFFF",
         }}
       >
-        <ActivityIndicator size="large" color="#2550ad" />
+        <Spinner size="large" color="#2550ad" />
+        <Text className="text-lg font-medium text-center text-black dark:text-white mt-5">
+          Checking app launching...
+          <Text className="animate-pulse">...</Text>
+        </Text>
       </View>
     );
   }

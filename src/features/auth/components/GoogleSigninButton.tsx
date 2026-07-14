@@ -1,11 +1,13 @@
-import { Button, ButtonText } from "@/components/ui/button";
+import { LoadingButton } from "@/components/common/LoadingButton";
+import { ButtonText } from "@/components/ui/button";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Alert, Image } from "react-native";
 import { useAuth } from "../hooks/useAuth";
 
 export function GoogleSigninButton() {
   const { googleSignin } = useAuth();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     GoogleSignin.configure({
@@ -16,6 +18,7 @@ export function GoogleSigninButton() {
   }, []);
 
   const handleGoogleSignIn = async () => {
+    setLoading(true);
     try {
       await GoogleSignin.hasPlayServices({
         showPlayServicesUpdateDialog: true,
@@ -28,14 +31,17 @@ export function GoogleSigninButton() {
       googleSignin(idToken);
     } catch (error: any) {
       Alert.alert("Sign In Failed", error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <Button
+    <LoadingButton
       variant="outline"
       size="lg"
       className="flex-1"
+      isLoading={loading}
       onPress={handleGoogleSignIn}
     >
       <Image
@@ -46,6 +52,6 @@ export function GoogleSigninButton() {
       <ButtonText className="text-black dark:text-white font-medium text-md text-center">
         Google
       </ButtonText>
-    </Button>
+    </LoadingButton>
   );
 }

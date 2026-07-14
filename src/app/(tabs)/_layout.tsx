@@ -1,7 +1,12 @@
 import { AuthGuard } from "@/components/guards/AuthGuard";
 import { AuthProvider } from "@/components/providers/AuthProvider";
 import { Tabs } from "expo-router";
-import { BriefcaseBusiness, CalendarCheck, House } from "lucide-react-native";
+import {
+  Bookmark,
+  BriefcaseBusiness,
+  CalendarCheck,
+  House,
+} from "lucide-react-native";
 import { useColorScheme } from "react-native";
 
 export default function TabLayout() {
@@ -54,7 +59,7 @@ export default function TabLayout() {
             options={{
               title: "Saved",
               tabBarIcon: ({ color, size }) => (
-                <BriefcaseBusiness color={color} size={size} />
+                <Bookmark color={color} size={size} />
               ),
               tabBarLabelStyle: {
                 fontSize: 13,
