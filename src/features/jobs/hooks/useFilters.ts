@@ -20,10 +20,10 @@ export function useFilters(setQuery: Dispatch<SetStateAction<JobQuery>>) {
         : undefined;
     const isRemoteVal =
       typeof next.isRemote === "string"
-        ? next.isRemote === "true"
-        : typeof next.isRemote === "boolean"
-          ? next.isRemote
-          : undefined;
+        ? next.isRemote === "active"
+          ? true
+          : false
+        : undefined;
 
     const createdAtStart =
       typeof next.createdAt === "object" && next.createdAt !== null

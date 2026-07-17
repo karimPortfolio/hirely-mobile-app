@@ -1,25 +1,11 @@
+import { Button } from "@/components/ui/button";
 import { useFilters } from "@/features/jobs/hooks/useFilters";
 import { JobQuery } from "@/features/jobs/types/jobs.types";
-import { FunnelX, Search, SlidersHorizontal } from "lucide-react-native";
+import { Search, Settings2 } from "lucide-react-native";
 import { Dispatch, SetStateAction, useState } from "react";
-import {
-  Text,
-  TextInput,
-  TouchableOpacity,
-  useColorScheme,
-} from "react-native";
-import {
-  Actionsheet,
-  ActionsheetBackdrop,
-  ActionsheetContent,
-  ActionsheetDragIndicator,
-  ActionsheetDragIndicatorWrapper,
-  ActionsheetItem,
-  ActionsheetItemText,
-} from "../ui/actionsheet";
+import { Text, TextInput, TouchableOpacity } from "react-native";
 import { Box } from "../ui/box";
-import { Button } from "../ui/button";
-import { VStack } from "../ui/vstack";
+import { FiltersActionsSheet } from "./FiltersActionsSheet";
 
 type FilterValue =
   | string
@@ -30,22 +16,22 @@ type FilterValue =
 interface SearchFiltersBarProps {
   setQuery: Dispatch<SetStateAction<JobQuery>>;
   query: JobQuery;
+  loading: boolean;
 }
 
-export function SearchFiltersBar({ setQuery, query }: SearchFiltersBarProps) {
-  const colorScheme = useColorScheme();
-  const isDark = colorScheme === "dark";
+export function SearchFiltersBar({
+  setQuery,
+  query,
+  loading,
+}: SearchFiltersBarProps) {
   const { handleFiltersChange, handleResetFilters, handleSearch } =
     useFilters(setQuery);
   const [alreadySearched, setAlreadySearched] = useState<boolean>(false);
-  const [showActionsheet, setShowActionsheet] = useState(false);
+  const [showActionSheet, setShowActionSheet] = useState(false);
   const [searchValue, setSearchValue] = useState("");
-  const [selectedFilters, setSelectedFilters] = useState<
-    Record<string, FilterValue>
-  >({});
 
   const handleToggleActionSheet = () => {
-    setShowActionsheet(!showActionsheet);
+    setShowActionSheet(!showActionSheet);
   };
 
   const handleSearchPress = () => {
@@ -71,42 +57,16 @@ export function SearchFiltersBar({ setQuery, query }: SearchFiltersBarProps) {
         className="flex flex-row items-center gap-2 bg-white dark:bg-zinc-900 w-fit p-4 rounded-full"
         onPress={handleToggleActionSheet}
       >
-        <SlidersHorizontal size={20} color={"gray"} />
+        <Settings2 size={20} color={"gray"} />
       </TouchableOpacity>
-      <Actionsheet
-        isOpen={showActionsheet}
-        onClose={() => setShowActionsheet(false)}
-      >
-        <ActionsheetBackdrop />
-        <ActionsheetContent>
-          <ActionsheetDragIndicatorWrapper>
-            <ActionsheetDragIndicator />
-          </ActionsheetDragIndicatorWrapper>
-          <VStack>
-            <Text>Job Type</Text>
-          </VStack>
-          <ActionsheetItem>
-            <ActionsheetItemText>Mark Unread</ActionsheetItemText>
-          </ActionsheetItem>
-          <ActionsheetItem>
-            <ActionsheetItemText>Remind Me</ActionsheetItemText>
-          </ActionsheetItem>
-          <ActionsheetItem>
-            <ActionsheetItemText>Add to Saved Items</ActionsheetItemText>
-          </ActionsheetItem>
-          <ActionsheetItem isDisabled>
-            <ActionsheetItemText>Delete</ActionsheetItemText>
-          </ActionsheetItem>
-          <Box className="w-full p-3">
-            <TouchableOpacity className="w-full bg-gray-100 dark:bg-zinc-800 rounded-lg p-4 flex flex-row justify-center items-center gap-2">
-              <FunnelX size={20} color={isDark ? "white" : "black"} />
-              <Text className="font-medium text-black dark:text-white">
-                Clear Filters
-              </Text>
-            </TouchableOpacity>
-          </Box>
-        </ActionsheetContent>
-      </Actionsheet>
+
+      <FiltersActionsSheet
+        handleFiltersChange={handleFiltersChange}
+        handleResetFilters={handleResetFilters}
+        showActionSheet={showActionSheet}
+        setShowActionSheet={setShowActionSheet}
+        loading={loading}
+      />
     </Box>
   );
 }

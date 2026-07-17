@@ -1,3 +1,4 @@
+import { LoadingButton } from "@/components/common/LoadingButton";
 import { Badge, BadgeText } from "@/components/ui/badge";
 import { Box } from "@/components/ui/box";
 import { Button, ButtonText } from "@/components/ui/button";
@@ -5,14 +6,16 @@ import { Card } from "@/components/ui/card";
 import { Heading } from "@/components/ui/heading";
 import { HStack } from "@/components/ui/hstack";
 import { VStack } from "@/components/ui/vstack";
+import { cn } from "@/lib/utils";
 import {
-    Bookmark,
-    BriefcaseBusiness,
-    Globe,
-    MapPin,
+  Bookmark,
+  BriefcaseBusiness,
+  Globe,
+  MapPin,
 } from "lucide-react-native";
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { Text, useColorScheme } from "react-native";
+import { usePublicJobActions } from "../hooks/usePublicJobsActions";
 import { Job } from "../types/jobs.types";
 
 const formatEmploymentType = (value: Job["employmentType"]) =>
@@ -26,18 +29,20 @@ const formatSalaryRange = (salaryMin?: number, salaryMax?: number) => {
   return `$${salaryMin.toLocaleString()} - $${salaryMax.toLocaleString()}`;
 };
 
-export function SuggestedJobCard({
-  job,
-  loading,
-}: {
+interface JobCardProps {
   job: Job;
-  loading: boolean;
-}) {
+  refetch: () => void;
+  refetching: boolean;
+  className?: string;
+}
+
+export function JobCard({ job, refetch, refetching, className }: JobCardProps) {
+  const { savePublicJob, unsavePublicJob, loading } = usePublicJobActions();
   const colorScheme = useColorScheme();
   const isDark = colorScheme === "dark";
 
   const bookmarkIcon = useMemo(() => {
-    if (!job || loading) return null;
+    if (!job || loading || refetching) return null;
 
     if (job.saved) {
       return <Bookmark size={20} fill="#2550ad" stroke="#2550ad" />;
@@ -46,9 +51,22 @@ export function SuggestedJobCard({
     return <Bookmark size={20} color={"gray"} />;
   }, [job?.saved]);
 
+  const saveOrUnsaveJob = useCallback(async () => {
+    const id = job._id;
+    if (job.saved) {
+      await unsavePublicJob(id);
+    } else {
+      await savePublicJob(id);
+    }
+    refetch();
+  }, [job]);
+
   return (
     <Card
-      className="min-w-96 max-w-110 h-full shadow-none bg-white dark:bg-zinc-900 border-0"
+      className={cn(
+        "min-w-96 max-w-110 shadow-none bg-white dark:bg-zinc-900 border-0",
+        className,
+      )}
       size="default"
     >
       <Box className="flex flex-row items-center justify-between">
@@ -58,12 +76,14 @@ export function SuggestedJobCard({
             {job.company.name}
           </Text>
         </VStack>
-        <Button
+        <LoadingButton
+          isLoading={loading || refetching}
           variant="outline"
           className="w-10 h-10 rounded-lg flex flex-row items-center"
+          onPress={saveOrUnsaveJob}
         >
           {bookmarkIcon}
-        </Button>
+        </LoadingButton>
       </Box>
       <Box className="flex flex-row flex-wrap items-center gap-3">
         <Badge variant="default" className="rounded-full p-1 px-3">

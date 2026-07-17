@@ -46,8 +46,24 @@ export interface JobQuery {
   sortBy?: 'createdAt' | 'title' | 'applicationsCount' | 'viewsCount';
   order?: 'asc' | 'desc';
   department?: string;
+  country?: string;
   createdAtStart?: string;
   createdAtEnd?: string;
+}
+
+export interface JobEmploymentTypeOption {
+  label: string;
+  value: 'full-time' | 'part-time' | 'contract' | 'internship';
+}
+
+export interface JobExperienceLevelOption {
+  label: string;
+  value: 'junior' | 'mid' | 'senior' | 'lead';
+}
+
+export interface RemoteOnlyOption {
+  label: string;
+  value: 'active' | 'inactive';
 }
 
 export interface PaginatedResponse<T> {
