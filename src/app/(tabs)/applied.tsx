@@ -46,7 +46,7 @@ export default function AppliedScreen() {
       status: undefined,
       page: 1,
     });
-    setActiveStatus("All");
+    setActiveStatus("all");
   }, [query, activeStatus]);
 
   return (
@@ -98,15 +98,21 @@ const ListItem = ({
     <TouchableOpacity
       className={cn(
         "mr-3 p-2 px-4 rounded-full",
-        activeStatus === item.value ? "bg-primary" : "bg-white dark:bg-zinc-900",
+        activeStatus === item.value
+          ? "bg-primary"
+          : "bg-white dark:bg-zinc-900",
       )}
       onPress={
-        item.value === "all" ? clearStatusFilter : () => handleFilterWithStatus(item.value)
+        item.value === "all"
+          ? clearStatusFilter
+          : () => handleFilterWithStatus(item.value)
       }
     >
       <Text
         className={cn(
-          activeStatus === item.value ? "text-white" : "text-black dark:text-white",
+          activeStatus === item.value
+            ? "text-white"
+            : "text-black dark:text-white",
         )}
       >
         {item.label}
