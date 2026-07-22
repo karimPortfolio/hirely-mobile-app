@@ -1,27 +1,23 @@
-import { useApiError } from "@/hooks/useApiError";
+import { PaginatedResponse, JobQuery } from "@/features/jobs/types/jobs.types";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { getPublicJobs } from "../services/jobs.service";
-import { Job, JobQuery, PaginatedResponse } from "../types/jobs.types";
+import { useApiError } from "@/hooks/useApiError";
+import { AppliedJob } from "../types/applied-jobs.type";
+import { getAppliedJobs } from "../services/applied-jobs.service";
 
-interface UsePublicJobsListOptions {
+interface UseAppliedJobsListOptions {
   infiniteScroll?: boolean;
 }
 
-export function usePublicJobsList(
+export function useAppliedJobsList(
   initialQuery?: JobQuery,
-  options?: UsePublicJobsListOptions, 
+  options?: UseAppliedJobsListOptions,
 ) {
   const isInfiniteScrollEnabled = options?.infiniteScroll ?? false;
 
-  const [jobs, setJobs] = useState<Job[]>([]);
-  const [data, setData] = useState<PaginatedResponse<Job> | null>(null);
-  const [nearbyJobs, setNearbyJobs] = useState<PaginatedResponse<Job> | null>(
-    null,
-  );
-
+  const [appliedJobs, setAppliedJobs] = useState<AppliedJob[]>([]);
+  const [data, setData] = useState<PaginatedResponse<AppliedJob> | null>(null);
   const [loading, setLoading] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
-  const [loadingNearbyJobs, setLoadingNearbyJobs] = useState(false);
   const { error, clearError, handleError } = useApiError();
 
   const [query, setQuery] = useState<JobQuery>({
@@ -54,17 +50,17 @@ export function usePublicJobsList(
           setLoadingMore(true);
         }
       } else {
-        setLoading(true); 
+        setLoading(true);
       }
 
       try {
-        const res = await getPublicJobs(query);
+        const res = await getAppliedJobs(query);
         const freshDocs = res.data?.docs ?? [];
 
         if (isInfiniteScrollEnabled && !isInitialPage) {
-          setJobs((prev) => [...prev, ...freshDocs]);
+          setAppliedJobs((prev) => [...prev, ...freshDocs]);
         } else {
-          setJobs(freshDocs);
+          setAppliedJobs(freshDocs);
         }
 
         setData(res.data);
@@ -79,30 +75,15 @@ export function usePublicJobsList(
     fetchJobs();
   }, [query, isInfiniteScrollEnabled]);
 
-  const refetch = useCallback(() => {
+  const refetch = useCallback(async () => {
     lastFetchKeyRef.current = null;
-    return getPublicJobs({ ...queryRef.current, page: 1 })
-      .then((res) => {
-        setJobs(res.data?.docs ?? []);
-        setData(res.data);
-        return res;
-      })
-      .catch((err) => handleError(err));
+    return await getAppliedJobs({ ...queryRef.current, page: 1 }).then((res) => {
+      setAppliedJobs(res.data?.docs ?? []);
+      setData(res.data);
+      return res;
+    })
+    .catch((err) => handleError(err));
   }, []);
-
-  const fetchNearbyJobs = async (country: string) => {
-    setLoadingNearbyJobs(true);
-    try {
-      queryRef.current = { ...queryRef.current, country };
-      const res = await getPublicJobs(queryRef.current);
-      setNearbyJobs(res.data);
-      queryRef.current = query;
-    } catch (err) {
-      handleError(err);
-    } finally {
-      setLoadingNearbyJobs(false);
-    }
-  };
 
   const loadMore = useCallback(() => {
     if (!isInfiniteScrollEnabled) return;
@@ -119,17 +100,14 @@ export function usePublicJobsList(
   }, [loading, loadingMore, data, isInfiniteScrollEnabled]);
 
   return {
-    jobs,
-    nearbyJobs: nearbyJobs?.docs ?? [],
+    appliedJobs,
     meta: data,
     loading,
     loadingMore,
-    loadingNearbyJobs,
 
     query,
     setQuery,
-    refetch,
     loadMore,
-    fetchNearbyJobs,
+    refetch,
   };
 }

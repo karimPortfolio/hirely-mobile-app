@@ -62,8 +62,8 @@ export function useFilters(setQuery: Dispatch<SetStateAction<JobQuery>>) {
     }));
   };
 
-  const handleSearch = (term: string) => {
-    setQuery((prev) => ({ ...prev, search: term, page: 1 }));
+  const handleSearch = (key: string, term: string) => {
+    setQuery((prev) => ({ ...prev, [key]: term, page: 1 }));
   };
 
   return {

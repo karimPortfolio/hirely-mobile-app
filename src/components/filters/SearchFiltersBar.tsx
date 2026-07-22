@@ -17,12 +17,16 @@ interface SearchFiltersBarProps {
   setQuery: Dispatch<SetStateAction<JobQuery>>;
   query: JobQuery;
   loading: boolean;
+  showFilters?: boolean;
+  customSearchKey?: string;
 }
 
 export function SearchFiltersBar({
   setQuery,
   query,
   loading,
+  showFilters = true,
+  customSearchKey,
 }: SearchFiltersBarProps) {
   const { handleFiltersChange, handleResetFilters, handleSearch } =
     useFilters(setQuery);
@@ -36,7 +40,8 @@ export function SearchFiltersBar({
 
   const handleSearchPress = () => {
     if (searchValue.trim() === "" && !alreadySearched) return;
-    handleSearch(searchValue.trim());
+    const searchKey = customSearchKey || "search";
+    handleSearch(searchKey, searchValue.trim());
     setAlreadySearched(true);
   };
 
@@ -53,20 +58,24 @@ export function SearchFiltersBar({
           <Text className="text-white font-medium">Search</Text>
         </Button>
       </Box>
-      <TouchableOpacity
-        className="flex flex-row items-center gap-2 bg-white dark:bg-zinc-900 w-fit p-4 rounded-full"
-        onPress={handleToggleActionSheet}
-      >
-        <Settings2 size={20} color={"gray"} />
-      </TouchableOpacity>
+      {showFilters && (
+        <Box>
+          <TouchableOpacity
+            className="flex flex-row items-center gap-2 bg-white dark:bg-zinc-900 w-fit p-4 rounded-full"
+            onPress={handleToggleActionSheet}
+          >
+            <Settings2 size={20} color={"gray"} />
+          </TouchableOpacity>
 
-      <FiltersActionsSheet
-        handleFiltersChange={handleFiltersChange}
-        handleResetFilters={handleResetFilters}
-        showActionSheet={showActionSheet}
-        setShowActionSheet={setShowActionSheet}
-        loading={loading}
-      />
+          <FiltersActionsSheet
+            handleFiltersChange={handleFiltersChange}
+            handleResetFilters={handleResetFilters}
+            showActionSheet={showActionSheet}
+            setShowActionSheet={setShowActionSheet}
+            loading={loading}
+          />
+        </Box>
+      )}
     </Box>
   );
 }

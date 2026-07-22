@@ -1,24 +1,16 @@
-import { LoadingButton } from "@/components/common/LoadingButton";
 import { Badge, BadgeText } from "@/components/ui/badge";
 import { Box } from "@/components/ui/box";
-import { Button, ButtonText } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Heading } from "@/components/ui/heading";
-import { HStack } from "@/components/ui/hstack";
 import { VStack } from "@/components/ui/vstack";
 import { cn } from "@/lib/utils";
-import {
-  Bookmark,
-  BriefcaseBusiness,
-  Globe,
-  MapPin,
-} from "lucide-react-native";
-import { useCallback, useMemo } from "react";
-import { Text, useColorScheme } from "react-native";
-import { usePublicJobActions } from "../hooks/usePublicJobsActions";
-import { Job } from "../types/jobs.types";
+import { BriefcaseBusiness, Globe, MapPin } from "lucide-react-native";
+import { useMemo } from "react";
+import { Text, useColorScheme, View } from "react-native";
+import { APPLICATION_STATUSES } from "../constants/applied-jobs.constants";
+import { AppliedJob } from "../types/applied-jobs.type";
 
-const formatEmploymentType = (value: Job["employmentType"]) =>
+const formatEmploymentType = (value: AppliedJob["job"]["employmentType"]) =>
   value
     .split("-")
     .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
@@ -26,40 +18,28 @@ const formatEmploymentType = (value: Job["employmentType"]) =>
 
 const formatSalaryRange = (salaryMin?: number, salaryMax?: number) => {
   if (!salaryMin || !salaryMax) return "Salary not specified";
-  return `$${salaryMin.toLocaleString()} - $${salaryMax.toLocaleString()}`;
+  return `$${salaryMin.toLocaleString()} - $${salaryMax.toLocaleString()} per year`;
 };
 
 interface JobCardProps {
-  job: Job;
-  refetch: () => void;
-  refetching: boolean;
+  appliedJob: AppliedJob;
   className?: string;
 }
 
-export function JobCard({ job, refetch, refetching, className }: JobCardProps) {
-  const { savePublicJob, unsavePublicJob, loading } = usePublicJobActions();
+export function AppliedJobCard({
+  appliedJob,
+  className,
+}: JobCardProps) {
   const colorScheme = useColorScheme();
   const isDark = colorScheme === "dark";
+  const job = appliedJob.job;
 
-  const bookmarkIcon = useMemo(() => {
-    if (!job || loading || refetching) return null;
-
-    if (job.saved) {
-      return <Bookmark size={20} fill="#2550ad" stroke="#2550ad" />;
-    }
-
-    return <Bookmark size={20} color={"gray"} />;
-  }, [job?.saved]);
-
-  const saveOrUnsaveJob = useCallback(async () => {
-    const id = job._id;
-    if (job.saved) {
-      await unsavePublicJob(id);
-    } else {
-      await savePublicJob(id);
-    }
-    refetch();
-  }, [job]);
+  const applicationStatus = useMemo(() => {
+    const foundedStatus = APPLICATION_STATUSES.find(
+      (s) => s.value === appliedJob.status,
+    );
+    return foundedStatus;
+  }, [APPLICATION_STATUSES, appliedJob]);
 
   return (
     <Card
@@ -69,21 +49,33 @@ export function JobCard({ job, refetch, refetching, className }: JobCardProps) {
       )}
       size="default"
     >
-      <Box className="flex flex-row items-center justify-between">
+      <Box className="flex flex-row items-start justify-between">
         <VStack>
           <Heading size="md">{job.title}</Heading>
           <Text className="text-gray-600 dark:text-gray-400">
             {job.company?.name}
           </Text>
         </VStack>
-        <LoadingButton
-          isLoading={loading || refetching}
-          variant="outline"
-          className="w-10 h-10 rounded-lg flex flex-row items-center"
-          onPress={saveOrUnsaveJob}
-        >
-          {bookmarkIcon}
-        </LoadingButton>
+        <Box className="pt-2">
+          <View
+            className={cn(
+              "p-1 px-3 rounded-md",
+              applicationStatus && applicationStatus.bgColorClass,
+            )}
+          >
+            {applicationStatus && (
+              <Text
+                className={cn(
+                  "font-medium text-sm",
+                  applicationStatus.textColorClass,
+                )}
+              >
+                {applicationStatus.label}
+              </Text>
+            )}
+            {!applicationStatus && <Text>Draft</Text>}
+          </View>
+        </Box>
       </Box>
       <Box className="flex flex-row flex-wrap items-center gap-3">
         <Badge variant="default" className="rounded-full p-1 px-3">
@@ -110,15 +102,16 @@ export function JobCard({ job, refetch, refetching, className }: JobCardProps) {
         <Text className="font-medium text-black dark:text-white">
           {formatSalaryRange(job.salaryMin, job.salaryMax)}
         </Text>
+        {/* <Badge variant="outline" className="flex flex-row items-center gap-2">
+          <Paperclip size={13} />
+          <Text className="text-sm">Attached resume</Text>
+        </Badge> */}
       </Box>
-      <HStack space="sm">
-        <Button className="flex-1">
-          <ButtonText>Apply Now</ButtonText>
-        </Button>
-        <Button className="flex-1" variant="outline">
-          <ButtonText>View Details</ButtonText>
-        </Button>
-      </HStack>
+      <Box>
+        <Text className="text-sm text-gray-600 dark:text-gray-400">
+          Applied {appliedJob.createdAtDiff}
+        </Text>
+      </Box>
     </Card>
   );
 }
