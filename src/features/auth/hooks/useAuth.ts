@@ -89,6 +89,7 @@ export function useAuth() {
     try {
       await logoutRequest();
       setUser(null);
+      await SecureStore.deleteItemAsync("access_token");
     } catch (err) {
       handleError(err);
     } finally {

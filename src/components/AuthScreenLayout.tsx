@@ -2,7 +2,7 @@ import React from "react";
 import { Image, StyleSheet, View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
-export function AuthPageLayout({ children }: { children: React.ReactNode }) {
+export function AuthScreenLayout({ children }: { children: React.ReactNode }) {
   return (
     <SafeAreaProvider>
       <View style={styles.container}>

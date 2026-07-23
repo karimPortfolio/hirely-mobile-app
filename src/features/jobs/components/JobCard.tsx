@@ -17,6 +17,7 @@ import { useCallback, useMemo } from "react";
 import { Text, useColorScheme } from "react-native";
 import { usePublicJobActions } from "../hooks/usePublicJobsActions";
 import { Job } from "../types/jobs.types";
+import { useRouter } from "expo-router";
 
 const formatEmploymentType = (value: Job["employmentType"]) =>
   value
@@ -38,6 +39,7 @@ interface JobCardProps {
 
 export function JobCard({ job, refetch, refetching, className }: JobCardProps) {
   const { savePublicJob, unsavePublicJob, loading } = usePublicJobActions();
+  const router = useRouter();
   const colorScheme = useColorScheme();
   const isDark = colorScheme === "dark";
 
@@ -115,7 +117,13 @@ export function JobCard({ job, refetch, refetching, className }: JobCardProps) {
         <Button className="flex-1">
           <ButtonText>Apply Now</ButtonText>
         </Button>
-        <Button className="flex-1" variant="outline">
+        <Button
+          className="flex-1"
+          variant="outline"
+          onPress={() =>
+            router.push({ pathname: "/jobs/[id]", params: { id: job._id } })
+          }
+        >
           <ButtonText>View Details</ButtonText>
         </Button>
       </HStack>

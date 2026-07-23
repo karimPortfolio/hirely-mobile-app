@@ -1,4 +1,4 @@
-import { PageLayout } from "@/components/PageLayout";
+import { TabsScreenLayout } from "@/components/TabsScreenLayout";
 import { Box } from "@/components/ui/box";
 import { Button, ButtonText } from "@/components/ui/button";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -30,7 +30,7 @@ export default function SetupScreen() {
   };
 
   return (
-    <PageLayout>
+    <TabsScreenLayout>
       <Box style={StyleSheet.absoluteFill} className="pt-30 bg-primary-dark">
         <View
           style={{
@@ -84,6 +84,6 @@ export default function SetupScreen() {
           </Button>
         </Box>
       </Box>
-    </PageLayout>
+    </TabsScreenLayout>
   );
 }

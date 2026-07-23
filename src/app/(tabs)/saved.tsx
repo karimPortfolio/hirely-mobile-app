@@ -1,6 +1,6 @@
 import { SearchFiltersBar } from "@/components/filters/SearchFiltersBar";
 import { Header } from "@/components/header/Header";
-import { PageLayout } from "@/components/PageLayout";
+import { TabsScreenLayout } from "@/components/TabsScreenLayout";
 import { Box } from "@/components/ui/box";
 import { Spinner } from "@/components/ui/spinner";
 import { DEPARTMENTS } from "@/features/jobs/constants/job-constants";
@@ -17,22 +17,16 @@ import {
 } from "react-native";
 
 export default function SavedScreen() {
-  const {
-    savedJobs,
-    loading,
-    loadingMore,
-    loadMore,
-    query,
-    setQuery,
-  } = useSavedJobsList(
-    {
-      page: 1,
-      limit: 5,
-      sortBy: "createdAt",
-      order: "desc",
-    },
-    { infiniteScroll: true },
-  );
+  const { savedJobs, loading, loadingMore, loadMore, query, setQuery } =
+    useSavedJobsList(
+      {
+        page: 1,
+        limit: 5,
+        sortBy: "createdAt",
+        order: "desc",
+      },
+      { infiniteScroll: true },
+    );
 
   const [activeDepartment, setActiveDepartment] = useState<string>("All");
 
@@ -71,7 +65,7 @@ export default function SavedScreen() {
   };
 
   return (
-    <PageLayout>
+    <TabsScreenLayout>
       <Header />
       <SearchFiltersBar setQuery={setQuery} query={query} loading={loading} />
       <Box className="pt-5">
@@ -100,7 +94,7 @@ export default function SavedScreen() {
         className="mt-5 grow-0 w-full"
         ListFooterComponent={renderFooter}
       />
-    </PageLayout>
+    </TabsScreenLayout>
   );
 }
 

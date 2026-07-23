@@ -1,6 +1,6 @@
 import { SearchFiltersBar } from "@/components/filters/SearchFiltersBar";
 import { Header } from "@/components/header/Header";
-import { PageLayout } from "@/components/PageLayout";
+import { TabsScreenLayout } from "@/components/TabsScreenLayout";
 import { Box } from "@/components/ui/box";
 import { AppliedJobsList } from "@/features/applied-jobs/components/AppliedJobsList";
 import { APPLICATION_STATUSES } from "@/features/applied-jobs/constants/applied-jobs.constants";
@@ -50,7 +50,7 @@ export default function AppliedScreen() {
   }, [query, activeStatus]);
 
   return (
-    <PageLayout>
+    <TabsScreenLayout>
       <Header />
       <SearchFiltersBar
         setQuery={setQuery}
@@ -79,7 +79,7 @@ export default function AppliedScreen() {
         loading={loading}
         loadingMore={loadingMore}
       />
-    </PageLayout>
+    </TabsScreenLayout>
   );
 }
 

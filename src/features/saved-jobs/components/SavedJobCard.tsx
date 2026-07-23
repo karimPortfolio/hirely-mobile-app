@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 import { BriefcaseBusiness, Globe, MapPin } from "lucide-react-native";
 import { Text, useColorScheme } from "react-native";
 import { SavedJob } from "../types/saved-jobs.type";
+import { useRouter } from "expo-router";
 
 const formatEmploymentType = (value: SavedJob["job"]["employmentType"]) =>
   value
@@ -26,10 +27,8 @@ interface JobCardProps {
   className?: string;
 }
 
-export function SavedJobCard({
-  savedJob,
-  className,
-}: JobCardProps) {
+export function SavedJobCard({ savedJob, className }: JobCardProps) {
+  const router = useRouter();
   const colorScheme = useColorScheme();
   const isDark = colorScheme === "dark";
   const job = savedJob.job;
@@ -85,7 +84,13 @@ export function SavedJobCard({
         <Button className="flex-1">
           <ButtonText>Apply Now</ButtonText>
         </Button>
-        <Button className="flex-1" variant="outline">
+        <Button
+          className="flex-1"
+          variant="outline"
+          onPress={() =>
+            router.push({ pathname: "/jobs/[id]", params: { id: job._id } })
+          }
+        >
           <ButtonText>View Details</ButtonText>
         </Button>
       </HStack>

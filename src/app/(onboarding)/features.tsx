@@ -1,4 +1,4 @@
-import { PageLayout } from "@/components/PageLayout";
+import { TabsScreenLayout } from "@/components/TabsScreenLayout";
 import { Box } from "@/components/ui/box";
 import { Button, ButtonText } from "@/components/ui/button";
 import { useRouter } from "expo-router";
@@ -17,7 +17,7 @@ export default function FeaturesScreen() {
   };
 
   return (
-    <PageLayout>
+    <TabsScreenLayout>
       <Box style={StyleSheet.absoluteFill} className="pt-30 bg-primary-dark">
         <View
           style={{
@@ -72,6 +72,6 @@ export default function FeaturesScreen() {
           </Button>
         </Box>
       </Box>
-    </PageLayout>
+    </TabsScreenLayout>
   );
 }

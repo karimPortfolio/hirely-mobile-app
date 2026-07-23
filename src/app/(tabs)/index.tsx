@@ -1,6 +1,6 @@
 import { SearchFiltersBar } from "@/components/filters/SearchFiltersBar";
 import { Header } from "@/components/header/Header";
-import { PageLayout } from "@/components/PageLayout";
+import { TabsScreenLayout } from "@/components/TabsScreenLayout";
 import { NearbyJobs } from "@/features/jobs/components/NearbyJobs";
 import { SuggestedJobs } from "@/features/jobs/components/SuggestedJobs";
 import { usePublicJobsList } from "@/features/jobs/hooks/usePublicJobsList";
@@ -33,11 +33,11 @@ export default function HomeScreen() {
   }, [countryName, isLoading, setQuery]);
 
   return (
-    <PageLayout>
+    <TabsScreenLayout>
       <Header />
       <SearchFiltersBar setQuery={setQuery} query={query} loading={loading} />
       <SuggestedJobs jobs={jobs} refetch={refetch} loading={loading} />
       <NearbyJobs jobs={nearbyJobs} loading={loadingNearbyJobs} />
-    </PageLayout>
+    </TabsScreenLayout>
   );
 }

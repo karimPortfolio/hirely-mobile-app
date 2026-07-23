@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useApiError } from "@/hooks/useApiError";
 import { getPublicJob, saveJob, unsaveJob } from "../services/jobs.service";
 
-export function usePublicJobActions(refetch?: () => Promise<void>) {
+export function usePublicJobActions() {
   const [loading, setLoading] = useState(false);
   const { error, clearError, handleError } = useApiError();
 

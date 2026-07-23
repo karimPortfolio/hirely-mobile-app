@@ -1,4 +1,4 @@
-import { AuthPageLayout } from "@/components/AuthPageLayout";
+import { AuthScreenLayout } from "@/components/AuthScreenLayout";
 import { Field } from "@/components/common/Field";
 import { LoadingButton } from "@/components/common/LoadingButton";
 import { Alert, AlertIcon, AlertText } from "@/components/ui/alert";
@@ -78,7 +78,7 @@ export default function RegisterScreen() {
   }, [apiError?.validationErrors]);
 
   return (
-    <AuthPageLayout>
+    <AuthScreenLayout>
       <Box className="flex items-center justify-center">
         <Image
           source={require("../../../assets/images/logo-dark.png")}
@@ -310,6 +310,6 @@ export default function RegisterScreen() {
           </Text>
         </Box>
       </ScrollView>
-    </AuthPageLayout>
+    </AuthScreenLayout>
   );
 }

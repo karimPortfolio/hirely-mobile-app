@@ -26,10 +26,7 @@ interface JobCardProps {
   className?: string;
 }
 
-export function AppliedJobCard({
-  appliedJob,
-  className,
-}: JobCardProps) {
+export function AppliedJobCard({ appliedJob, className }: JobCardProps) {
   const colorScheme = useColorScheme();
   const isDark = colorScheme === "dark";
   const job = appliedJob.job;

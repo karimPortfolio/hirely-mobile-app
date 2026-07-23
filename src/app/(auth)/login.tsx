@@ -1,4 +1,4 @@
-import { AuthPageLayout } from "@/components/AuthPageLayout";
+import { AuthScreenLayout } from "@/components/AuthScreenLayout";
 import { Field } from "@/components/common/Field";
 import { LoadingButton } from "@/components/common/LoadingButton";
 import { Box } from "@/components/ui/box";
@@ -19,6 +19,7 @@ import { GoogleSigninButton } from "@/features/auth/components/GoogleSigninButto
 import { useAuth } from "@/features/auth/hooks/useAuth";
 import { loginSchema } from "@/features/auth/schemas/login.schema";
 import { cn } from "@/lib/utils";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Link } from "expo-router";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -38,7 +39,7 @@ export default function LoginScreen() {
     clearErrors,
     setError,
   } = useForm<LoginFormData>({
-    // resolver: zodResolver(loginSchema),
+    resolver: zodResolver(loginSchema),
     defaultValues: {
       email: "",
       password: "",
@@ -54,7 +55,7 @@ export default function LoginScreen() {
   };
 
   return (
-    <AuthPageLayout>
+    <AuthScreenLayout>
       <Box className="flex items-center justify-center">
         <Image
           source={require("../../../assets/images/logo-dark.png")}
@@ -178,6 +179,6 @@ export default function LoginScreen() {
           </Text>
         </Box>
       </Box>
-    </AuthPageLayout>
+    </AuthScreenLayout>
   );
 }

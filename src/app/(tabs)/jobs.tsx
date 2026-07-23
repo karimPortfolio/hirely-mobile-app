@@ -1,6 +1,6 @@
 import { SearchFiltersBar } from "@/components/filters/SearchFiltersBar";
 import { Header } from "@/components/header/Header";
-import { PageLayout } from "@/components/PageLayout";
+import { TabsScreenLayout } from "@/components/TabsScreenLayout";
 import { Box } from "@/components/ui/box";
 import { Spinner } from "@/components/ui/spinner";
 import { JobCard } from "@/features/jobs/components/JobCard";
@@ -65,7 +65,7 @@ export default function JobsScreen() {
   };
 
   return (
-    <PageLayout>
+    <TabsScreenLayout>
       <Header />
       <SearchFiltersBar setQuery={setQuery} query={query} loading={loading} />
       <Box className="pt-5">
@@ -99,7 +99,7 @@ export default function JobsScreen() {
         className="mt-5 grow-0 w-full"
         ListFooterComponent={renderFooter}
       />
-    </PageLayout>
+    </TabsScreenLayout>
   );
 }
 

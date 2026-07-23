@@ -1,12 +1,12 @@
-import { PageLayout } from "@/components/PageLayout";
+import { TabsScreenLayout } from "@/components/TabsScreenLayout";
 import { Text } from "react-native";
 
 export default function NotificationsScreen() {
   return (
-    <PageLayout>
+    <TabsScreenLayout>
       <Text className="text-3xl text-center text-black dark:text-white">
         Profile
       </Text>
-    </PageLayout>
+    </TabsScreenLayout>
   );
 }
