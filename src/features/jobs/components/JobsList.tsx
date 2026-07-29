@@ -1,31 +1,33 @@
 import { FlatList, Text, View } from "react-native";
-import { AppliedJob } from "../types/applied-jobs.type";
-import { AppliedJobCard } from "./AppliedJobCard";
 import { Spinner } from "@/components/ui/spinner";
 import { memo } from "react";
 import { Box } from "@/components/ui/box";
 import { HStack } from "@/components/ui/hstack";
 import { Skeleton, SkeletonText } from "@/components/ui/skeleton";
 import { Card } from "@/components/ui/card";
+import { Job } from "../types/jobs.types";
+import { JobCard } from "./JobCard";
 
-interface AppliedJobsListProps {
-  appliedJobs: AppliedJob[];
+interface JobsListProps {
+  jobs: Job[];
   loadingMore: boolean;
   loading: boolean;
   loadMore: () => void;
+  refetch: () => void;
 }
 
-export function AppliedJobsList({
-  appliedJobs,
+export function JobsList({
+  jobs,
   loadingMore,
   loading,
   loadMore,
-}: AppliedJobsListProps) {
+  refetch,
+}: JobsListProps) {
   if (loading) {
     return <JobLoadingSkeleton />;
   }
 
-  if (!Array.isArray(appliedJobs) || !appliedJobs.length) {
+  if (!Array.isArray(jobs) || !jobs.length) {
     return <JobsFallbackComponent />;
   }
 
@@ -40,9 +42,14 @@ export function AppliedJobsList({
 
   return (
     <FlatList
-      data={appliedJobs}
+      data={jobs}
       renderItem={({ item }) => (
-        <AppliedJobCard appliedJob={item} className="!max-w-full mb-5" />
+        <JobCard
+          job={item}
+          refetch={refetch}
+          refetching={loading}
+          className="!max-w-full mb-5"
+        />
       )}
       keyExtractor={(item) => item._id}
       onEndReached={loadMore}
@@ -79,7 +86,7 @@ const JobsFallbackComponent = memo(() => (
   <Box className="mt-5">
     <Card className="w-full shadow-none">
       <Text className="font-medium text-lg text-center text-black dark:text-white">
-        No applied jobs found
+        No jobs found
       </Text>
       <Text className="text-gray-600 dark:text-gray-400 text-center">
         Try changing your search or filters to discover more roles.

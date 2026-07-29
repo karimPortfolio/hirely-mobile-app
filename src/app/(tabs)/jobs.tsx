@@ -4,6 +4,7 @@ import { TabsScreenLayout } from "@/components/TabsScreenLayout";
 import { Box } from "@/components/ui/box";
 import { Spinner } from "@/components/ui/spinner";
 import { JobCard } from "@/features/jobs/components/JobCard";
+import { JobsList } from "@/features/jobs/components/JobsList";
 import { DEPARTMENTS } from "@/features/jobs/constants/job-constants";
 import { usePublicJobsList } from "@/features/jobs/hooks/usePublicJobsList";
 import { cn } from "@/lib/utils";
@@ -55,15 +56,6 @@ export default function JobsScreen() {
     setActiveDepartment("All");
   }, [query, activeDepartment]);
 
-  const renderFooter = () => {
-    if (!loadingMore) return null;
-    return (
-      <View className="py-4 justify-center items-center">
-        <Spinner size="small" color="#2550ad" />
-      </View>
-    );
-  };
-
   return (
     <TabsScreenLayout>
       <Header />
@@ -81,23 +73,12 @@ export default function JobsScreen() {
           ))}
         </ScrollView>
       </Box>
-      <FlatList
-        data={jobs}
-        renderItem={({ item }) => (
-          <JobCard
-            job={item}
-            refetch={refetch}
-            refetching={loading}
-            className="!max-w-full mb-5"
-          />
-        )}
-        keyExtractor={(item) => item._id}
-        onEndReached={loadMore}
-        onEndReachedThreshold={0.3}
-        scrollEnabled
-        showsVerticalScrollIndicator={false}
-        className="mt-5 grow-0 w-full"
-        ListFooterComponent={renderFooter}
+      <JobsList
+        jobs={jobs}
+        loadMore={loadMore}
+        loading={loading}
+        loadingMore={loadingMore}
+        refetch={refetch}
       />
     </TabsScreenLayout>
   );

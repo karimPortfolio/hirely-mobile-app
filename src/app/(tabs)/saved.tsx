@@ -5,6 +5,7 @@ import { Box } from "@/components/ui/box";
 import { Spinner } from "@/components/ui/spinner";
 import { DEPARTMENTS } from "@/features/jobs/constants/job-constants";
 import { SavedJobCard } from "@/features/saved-jobs/components/SavedJobCard";
+import { SavedJobsList } from "@/features/saved-jobs/components/SavedJobsList";
 import { useSavedJobsList } from "@/features/saved-jobs/hooks/useSavedJobsList";
 import { cn } from "@/lib/utils";
 import { useCallback, useState } from "react";
@@ -81,18 +82,11 @@ export default function SavedScreen() {
           ))}
         </ScrollView>
       </Box>
-      <FlatList
-        data={savedJobs}
-        renderItem={({ item }) => (
-          <SavedJobCard savedJob={item} className="!max-w-full mb-5" />
-        )}
-        keyExtractor={(item) => item._id}
-        onEndReached={loadMore}
-        onEndReachedThreshold={0.3}
-        scrollEnabled
-        showsVerticalScrollIndicator={false}
-        className="mt-5 grow-0 w-full"
-        ListFooterComponent={renderFooter}
+      <SavedJobsList
+        savedJobs={savedJobs}
+        loadMore={loadMore}
+        loadingMore={loadingMore}
+        loading={loading}
       />
     </TabsScreenLayout>
   );

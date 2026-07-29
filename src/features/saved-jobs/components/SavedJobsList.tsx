@@ -1,31 +1,31 @@
 import { FlatList, Text, View } from "react-native";
-import { AppliedJob } from "../types/applied-jobs.type";
-import { AppliedJobCard } from "./AppliedJobCard";
 import { Spinner } from "@/components/ui/spinner";
 import { memo } from "react";
 import { Box } from "@/components/ui/box";
 import { HStack } from "@/components/ui/hstack";
 import { Skeleton, SkeletonText } from "@/components/ui/skeleton";
 import { Card } from "@/components/ui/card";
+import { SavedJob } from "../types/saved-jobs.type";
+import { SavedJobCard } from "./SavedJobCard";
 
-interface AppliedJobsListProps {
-  appliedJobs: AppliedJob[];
+interface SavedJobsListProps {
   loadingMore: boolean;
+  savedJobs: SavedJob[];
   loading: boolean;
   loadMore: () => void;
 }
 
-export function AppliedJobsList({
-  appliedJobs,
+export function SavedJobsList({
+  savedJobs,
   loadingMore,
   loading,
   loadMore,
-}: AppliedJobsListProps) {
+}: SavedJobsListProps) {
   if (loading) {
     return <JobLoadingSkeleton />;
   }
 
-  if (!Array.isArray(appliedJobs) || !appliedJobs.length) {
+  if (!Array.isArray(savedJobs) || !savedJobs.length) {
     return <JobsFallbackComponent />;
   }
 
@@ -40,9 +40,9 @@ export function AppliedJobsList({
 
   return (
     <FlatList
-      data={appliedJobs}
+      data={savedJobs}
       renderItem={({ item }) => (
-        <AppliedJobCard appliedJob={item} className="!max-w-full mb-5" />
+        <SavedJobCard savedJob={item} className="!max-w-full mb-5" />
       )}
       keyExtractor={(item) => item._id}
       onEndReached={loadMore}
@@ -79,7 +79,7 @@ const JobsFallbackComponent = memo(() => (
   <Box className="mt-5">
     <Card className="w-full shadow-none">
       <Text className="font-medium text-lg text-center text-black dark:text-white">
-        No applied jobs found
+        No saved jobs found
       </Text>
       <Text className="text-gray-600 dark:text-gray-400 text-center">
         Try changing your search or filters to discover more roles.
