@@ -50,7 +50,6 @@ export default function JobDetailsScreen() {
     clearApiError();
     try {
       const data = await findJob(id);
-      console.log("New Data:", data);
       setJob(data);
     } catch (err) {}
   }, [id]);
@@ -201,7 +200,15 @@ export default function JobDetailsScreen() {
           >
             {bookmarkIcon}
           </LoadingButton>
-          <Button className="flex-1 py-3">
+          <Button
+            className="flex-1 py-3"
+            onPress={() =>
+              router.push({
+                pathname: "/jobs/[id]/apply",
+                params: { id: job._id },
+              })
+            }
+          >
             <ButtonText className="text-md font-medium">Apply Now</ButtonText>
           </Button>
         </Box>

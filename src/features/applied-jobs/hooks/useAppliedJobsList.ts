@@ -77,12 +77,13 @@ export function useAppliedJobsList(
 
   const refetch = useCallback(async () => {
     lastFetchKeyRef.current = null;
-    return await getAppliedJobs({ ...queryRef.current, page: 1 }).then((res) => {
-      setAppliedJobs(res.data?.docs ?? []);
-      setData(res.data);
-      return res;
-    })
-    .catch((err) => handleError(err));
+    return await getAppliedJobs({ ...queryRef.current, page: 1 })
+      .then((res) => {
+        setAppliedJobs(res.data?.docs ?? []);
+        setData(res.data);
+        return res;
+      })
+      .catch((err) => handleError(err));
   }, []);
 
   const loadMore = useCallback(() => {

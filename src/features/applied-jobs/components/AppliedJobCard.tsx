@@ -10,11 +10,14 @@ import { Text, useColorScheme, View } from "react-native";
 import { APPLICATION_STATUSES } from "../constants/applied-jobs.constants";
 import { AppliedJob } from "../types/applied-jobs.type";
 
-const formatEmploymentType = (value: AppliedJob["job"]["employmentType"]) =>
-  value
+const formatEmploymentType = (value: AppliedJob["job"]["employmentType"]) => {
+  if (!value) return "Unknown";
+
+  return value
     .split("-")
     .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
     .join("-");
+};
 
 const formatSalaryRange = (salaryMin?: number, salaryMax?: number) => {
   if (!salaryMin || !salaryMax) return "Salary not specified";

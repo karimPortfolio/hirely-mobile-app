@@ -20,6 +20,7 @@ import { useAuth } from "@/features/auth/hooks/useAuth";
 import { loginSchema } from "@/features/auth/schemas/login.schema";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Link } from "expo-router";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -46,6 +47,10 @@ export default function LoginScreen() {
       remember_me: false,
     },
   });
+
+  const handleResetOnborading = async () => {
+    await AsyncStorage.removeItem("HAS_LAUNCHED");
+  };
 
   const onSubmit = async (data: LoginFormData) => {
     clearApiError();

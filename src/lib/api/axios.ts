@@ -15,19 +15,19 @@ export const api = axios.create({
 api.interceptors.request.use(
   async (config) => {
     try {
-      const token = await SecureStore.getItemAsync('access_token');      
+      const token = await SecureStore.getItemAsync("access_token");
       if (token && config.headers) {
         config.headers.Authorization = `Bearer ${token}`;
       }
     } catch (error) {
-      console.error('Failed to fetch secure token for API interceptor', error);
+      console.error("Failed to fetch secure token for API interceptor", error);
     }
-    
+
     return config;
   },
   (error) => {
     return Promise.reject(error);
-  }
+  },
 );
 
 api.interceptors.response.use(
@@ -43,7 +43,9 @@ api.interceptors.response.use(
       !endpoint.includes("/auth/login") &&
       !endpoint.includes("/auth/logout")
     ) {
-      toastBridge.emitSuccess(message ?? "Request completed successfully");
+      if (message) {
+        toastBridge.emitSuccess(message);
+      }
     }
 
     return response;
