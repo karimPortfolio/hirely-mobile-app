@@ -106,7 +106,7 @@ export function FiltersActionsSheet({
           <ActionsheetDragIndicator />
         </ActionsheetDragIndicatorWrapper>
         <HStack space="sm" className="w-full items-center mb-5">
-          <Settings2 size={22} />
+          <Settings2 size={22} color={"gray"} />
           <Text className="text-xl font-medium text-black dark:text-white">
             Filters
           </Text>

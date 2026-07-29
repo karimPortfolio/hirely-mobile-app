@@ -114,7 +114,15 @@ export function JobCard({ job, refetch, refetching, className }: JobCardProps) {
         </Text>
       </Box>
       <HStack space="sm">
-        <Button className="flex-1">
+        <Button
+          className="flex-1"
+          onPress={() =>
+            router.push({
+              pathname: "/jobs/[id]/apply",
+              params: { id: job._id },
+            })
+          }
+        >
           <ButtonText>Apply Now</ButtonText>
         </Button>
         <Button
